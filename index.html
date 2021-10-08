@@ -31,6 +31,7 @@
         border-top: 1px solid #2d2d2d;
         color: #d4d4c9;
         float: left;
+        overflow-y: scroll;
     }
 
     .output-header
@@ -45,7 +46,6 @@
     {
         font-family: monospace;
         font-size: 16px;
-        overflow-y: scroll;
     }
 
     ::-webkit-scrollbar 
@@ -106,8 +106,8 @@
                     output.innerHTML = calls.join("<br>")
                 }
                 catch (e)
-                {
-                    output.innerHTML = `<span style="color: red">` + e.message + "</span>"
+                {   
+                    output.innerHTML = `${calls.join("<br>")}<br><span style="color: red">` + e + "</span>"
                 }
             })
         })
