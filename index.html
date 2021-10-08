@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Live JavaScript Editor</title>
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+</head>
+<style>
+    * 
+    {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+    body 
+    {
+        height: 100vh;
+    }
+    .code
+    {
+        width: 85%;
+        height: 75vh;
+        background-color: #1e1e1e;
+    }
+    .output
+    {
+        width: 85%;
+        height: 25vh;
+        padding: 5px 20px;
+        background-color: #1e1e1e;
+        border-top: 1px solid #2d2d2d;
+        color: #d4d4c9;
+        float: left;
+    }
+
+    .output-header
+    {
+        text-transform: uppercase;
+        font-size: 11px;
+        padding-bottom: 16px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .output-text
+    {
+        font-family: monospace;
+        font-size: 16px;
+        overflow-y: scroll;
+    }
+
+    ::-webkit-scrollbar 
+    {
+        width: 15px;
+    }
+    ::-webkit-scrollbar-track 
+    {
+    background: #1e1e1e;
+    }
+ 
+    ::-webkit-scrollbar-thumb 
+    {
+    background: #2d2d2d;
+    }
+    ::-webkit-scrollbar-thumb:hover 
+    {
+    background: rgb(66, 66, 66); 
+    }
+
+    .gray
+    {
+        background-color: #252526;
+        height: 100vh;
+        width: 15%;
+        float: left;
+    }
+</style>
+<body oncontextmenu="return false;">
+    <div class="gray"></div>
+    <div id="container" class="code" style="overflow: hidden;"></div>
+    <div class="output">
+        <div class="output-header">Terminal</div>
+        <div class="output-text" id="output"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/loader.min.js"></script>
+    <script>
+        require.config({ paths: { "vs": "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs" }})
+        require(["vs/editor/editor.main"], () => 
+        {
+            const model = monaco.editor.create(document.getElementById("container"), 
+            {
+                value: "",
+                language: "javascript",
+                theme: "vs-dark",
+
+            }).getModel()
+
+            const output = document.getElementById("output")
+
+            model.onDidChangeContent(() => 
+            {
+
+                try
+                {
+                    calls = []
+                    eval(model.getValue())
+                    output.innerHTML = calls.join("<br>")
+                }
+                catch (e)
+                {
+                    output.innerHTML = `<span style="color: red">` + e.message + "</span>"
+                }
+            })
+        })
+
+        //var old_log = console.log
+        var calls = []
+            console.log = msg =>
+            {
+                //old_log.call(console, msg)
+                calls.push(msg)
+            }
+    </script>
+</body>
+</html>
